@@ -35,8 +35,10 @@ export const handle = async (headers: IncomingHttpHeaders, payload: any): Promis
   }
 
   const githubEvent = headers['x-github-event'] as string;
+  const githubDelivery = headers['x-github-delivery'] as string;
 
   console.debug(`Received Github event: "${githubEvent}"`);
+  console.debug(`X-GitHub-Delivery: "${githubDelivery}"`);
 
   if (githubEvent === 'check_run') {
     const body = JSON.parse(payload) as CheckRunEvent;
