@@ -2,9 +2,7 @@ name: Release build
 
 on:
   push:
-    branches:
-      - master
-      - develop
+  workflow_dispatch:
 
 jobs:
   prepare:
@@ -12,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     container: node:12
     strategy:
-      matrix: 
+      matrix:
         lambda: ["modules/webhook/lambdas/webhook", "modules/runner-binaries-syncer/lambdas/runner-binaries-syncer", "modules/runners/lambdas/runners"]
     steps:
       - name: Extract lambda name
@@ -54,30 +52,11 @@ jobs:
           name: runner-binaries-syncer
           path: artifacts
 
-      - name: Get installation token
-        uses: npalm/action-app-token@v1.0.0
-        id: app-token
-        with:
-          appId: ${{ secrets.FOREST_RELEASER_APP_ID }}
-          appPrivateKeyBase64: ${{ secrets.FOREST_RELEASER_APP_PRIVATE_KEY_BASE64 }}
-          appInstallationType: repo
-          appInstallationValue: ${{ github.repository }}
-
       - name: Dry run release
-        if: github.event_name != 'pull_request' 
+        # if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Read only token
         run: |
           cp .release/* .
           yarn
-          yarn release -d --repositoryUrl https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
-          
-      - name: Release
-        if: github.event_name != 'pull_request' && contains('refs/heads/master', github.ref)
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          cp .release/* .
-          yarn
           yarn release --repositoryUrl https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
-

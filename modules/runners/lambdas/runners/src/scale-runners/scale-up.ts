@@ -79,6 +79,9 @@ export const scaleUp = async (eventSource: string, payload: ActionRequestMessage
       const labelsArgument = runnerExtraLabels !== undefined ? `--labels ${runnerExtraLabels}` : '';
       const runnerGroupArgument = runnerGroup !== undefined ? ` --runnergroup ${runnerGroup}` : '';
       const configBaseUrl = ghesBaseUrl ? ghesBaseUrl : 'https://github.com';
+
+      console.info('Creating Runner for Peter and Daniel!');
+
       await createRunner({
         environment: environment,
         runnerConfig: enableOrgLevel
