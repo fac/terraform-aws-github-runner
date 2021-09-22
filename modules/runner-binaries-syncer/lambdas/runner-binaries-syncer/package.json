@@ -30,6 +30,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "yn": "^4.0.0"
+    "yn": "^5.0.0"
   }
 }
